@@ -38,7 +38,7 @@ This task breakdown translates the approved MVP documents into implementation wo
 ### 3. Field Creation Flow
 
 1. Implement new restaurant creation with captured coordinates.
-2. Reduce accidental duplicate creation by requiring nearby-map review before creation, while leaving the exact duplicate-matching threshold to the documented review rules.
+2. Reduce accidental duplicate creation by requiring nearby-map review before creation, while leaving the exact duplicate-matching threshold to the CSV import and review rules in [Domain Rules](./domain-rules.md).
 3. Redirect directly into the first visit report after a successful create.
 
 ### 4. Supervisor Operations

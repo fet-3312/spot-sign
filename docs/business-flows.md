@@ -31,6 +31,7 @@ flowchart TD
 
 ### Flow Notes
 
+- The geolocation fallback and derived-summary expectations in this flow map back to the default-area and restaurant-summary rules in `prd.md` and `domain-rules.md`.
 - The reporting flow must still work when browser geolocation is denied by loading a deployment-configured default area.
 - Marker summaries must surface current status, current owner, and latest report time before the rep enters the report page.
 - A successful report updates the current restaurant summary but does not overwrite historical visit reports.
@@ -52,6 +53,7 @@ flowchart TD
 
 ### Flow Notes
 
+- This creation flow follows the field-creation and location-capture requirements in `prd.md`, while duplicate handling remains constrained by the review-oriented rules in `domain-rules.md`.
 - The creation path exists for field discovery, not bulk intake. Bulk seeding remains the CSV import workflow.
 - The first report should happen in the same field session so the restaurant does not remain context-free after creation.
 
@@ -73,6 +75,7 @@ flowchart TD
 
 ### Flow Notes
 
+- The reassignment-reason and optimistic-concurrency checks in this flow come directly from the assignment rules in `domain-rules.md`.
 - Reassignment always requires a reason once an active owner exists.
 - The system must prevent silent ownership overwrite when two supervisors act on the same restaurant.
 
@@ -104,6 +107,7 @@ sequenceDiagram
 
 ### Flow Notes
 
+- The publish-vs-review split in this flow is governed by the CSV import rules and review resolution actions in `domain-rules.md`.
 - CSV import review is handled as part of the supervisor review workflow rather than as an unrelated standalone process.
 - CSV import is the minimum bulk onboarding workflow and requires at least `name` and `address`.
 - Failed geocodes and duplicate candidates must route to supervisor review instead of silently publishing questionable data.
