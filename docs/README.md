@@ -16,6 +16,12 @@ This folder contains the current planning baseline for the Spot Sign MVP.
    Status transitions, assignment rules, import review rules, and media constraints.
 6. [SA Decisions](./sa-decisions-mvp.md)
    Approved MVP decisions for authentication and geocoding.
+7. [Business Flows](./business-flows.md)
+   Expanded PD flowcharts, cross-role handoffs, and operational review checkpoints.
+8. [Implementation Tasks](./implementation-tasks.md)
+   Delivery workstreams, phased task breakdown, and definition of done.
+9. [Testing Guide](./testing-guide.md)
+   Verification strategy, acceptance-criteria checklist, and multi-agent challenge validation.
 
 ## Current Baseline
 
@@ -34,6 +40,9 @@ This folder contains the current planning baseline for the Spot Sign MVP.
 - Use `api-contract.md` when implementing server routes and frontend integration.
 - Use `domain-rules.md` when implementing validation, state transitions, assignment logic, and QA cases.
 - Use `sa-decisions-mvp.md` for finalized MVP decisions that constrain implementation.
+- Use `business-flows.md` when PD, RD, and QA need the same delivery-ready flowchart and handoff view.
+- Use `implementation-tasks.md` to sequence MVP work without adding undocumented scope.
+- Use `testing-guide.md` to verify changes against the documented requirements instead of guessing.
 
 ## Iteration Rule
 

@@ -34,6 +34,9 @@ pnpm build
 - [docs/api-contract.md](./docs/api-contract.md): API request/response 與驗證規格
 - [docs/domain-rules.md](./docs/domain-rules.md): 狀態流轉、指派與媒體規則
 - [docs/sa-decisions-mvp.md](./docs/sa-decisions-mvp.md): 已定案的 MVP 技術決策
+- [docs/business-flows.md](./docs/business-flows.md): PD 展開後的業務流程圖與跨角色交接點
+- [docs/implementation-tasks.md](./docs/implementation-tasks.md): RD/PM 可直接採用的任務拆解與交付順序
+- [docs/testing-guide.md](./docs/testing-guide.md): 驗證策略、驗收清單與多 Agent 挑戰檢查方式
 
 ## Current Baseline
 
