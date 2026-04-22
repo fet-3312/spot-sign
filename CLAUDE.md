@@ -4,6 +4,15 @@
 - **Package Manager**: pnpm
 - **Add-ons**: prettier, eslint, vitest, playwright, tailwindcss, mcp
 
+## Execution Rule
+
+- If a task requires more than three steps, always present a plan before making changes or running commands.
+- If a file grows beyond 300 lines, you must consider splitting it into smaller modules or components.
+- If a tool or existing function already covers the needed behavior, do not reimplement the same functionality.
+- Prefer well-maintained mainstream third-party libraries over building custom solutions from scratch when they fit the problem.
+- The product must use a responsive mobile-first design.
+- The deployment target is Cloudflare on the Free plan, so architecture and features must stay within Free plan constraints.
+
 ---
 
 You are able to use the Svelte MCP server, where you have access to comprehensive Svelte 5 and SvelteKit documentation. Here's how to use the available tools effectively:

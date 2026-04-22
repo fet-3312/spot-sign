@@ -1,42 +1,43 @@
-# sv
+# Spot Sign
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+Spot Sign 是提供外勤業務回報餐廳簽約狀況的內部系統，讓業務可在外勤過程快速更新拜訪結果，主管也能追蹤餐廳指派與簽約進度。
 
-## Creating a project
+## 專案內容
 
-If you're seeing this, you've probably already done this step. Congrats!
+- 以地圖為主的外勤拜訪與回報流程
+- 記錄餐廳簽約狀態、聯絡人、備註與現場照片
+- 支援主管檢視回報紀錄與指派餐廳負責業務
 
-```sh
-# create a new project
-npx sv create my-app
-```
-
-To recreate this project with the same configuration:
+## Quick Start
 
 ```sh
-# recreate this project
-pnpm dlx sv@0.15.1 create --template minimal --types ts --add prettier eslint vitest="usages:unit,component" playwright tailwindcss="plugins:typography,forms" mcp="ide:claude-code,vscode+setup:local" --install pnpm spot-sign
+pnpm install
+pnpm dev
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+常用指令：
 
 ```sh
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+pnpm check
+pnpm lint
+pnpm test
+pnpm build
 ```
 
-## Building
+## Docs
 
-To create a production version of your app:
+完整規格與設計請直接看 [docs/README.md](./docs/README.md)。
 
-```sh
-npm run build
-```
+- [docs/prd.md](./docs/prd.md): 產品範圍、角色、流程與 MVP 邊界
+- [docs/system-architecture.md](./docs/system-architecture.md): 系統架構、部署與責任切分
+- [docs/technical-design-cloudflare-v0.1.md](./docs/technical-design-cloudflare-v0.1.md): Cloudflare-first 技術設計基線
+- [docs/api-contract.md](./docs/api-contract.md): API request/response 與驗證規格
+- [docs/domain-rules.md](./docs/domain-rules.md): 狀態流轉、指派與媒體規則
+- [docs/sa-decisions-mvp.md](./docs/sa-decisions-mvp.md): 已定案的 MVP 技術決策
 
-You can preview the production build with `npm run preview`.
+## Current Baseline
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+- Frontend 與 API 目前維持在同一個 SvelteKit codebase
+- 部署目標是 Cloudflare Workers
+- 資料庫使用 D1
+- 圖片儲存使用 R2
