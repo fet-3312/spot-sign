@@ -71,17 +71,46 @@ This MVP is designed for fast validation with a small internal team and mobile-f
 
 Open app -> allow location -> view nearby markers -> tap marker -> review summary -> open report page -> submit update.
 
+| Step | Actor     | Goal                                 | Key system response                                                                                          |
+| ---- | --------- | ------------------------------------ | ------------------------------------------------------------------------------------------------------------ |
+| 1    | Sales rep | Open app and allow geolocation       | Load nearby restaurants, or fall back to the configured default area if geolocation is denied or unavailable |
+| 2    | Sales rep | Review nearby restaurants on the map | Show markers with status, current assignee, and latest report time                                           |
+| 3    | Sales rep | Open a restaurant from the map       | Show a summary panel before entering the report page                                                         |
+| 4    | Sales rep | Submit a field update                | Persist status, contact, notes, and one photo without losing audit history                                   |
+| 5    | System    | Reflect the latest field state       | Update derived restaurant summary while preserving immutable visit reports                                   |
+
 ### Rep New Restaurant Flow
 
 Open app -> choose add restaurant -> use current location or tap map -> enter base information -> create restaurant -> enter report.
+
+| Step | Actor     | Goal                                     | Key system response                                                    |
+| ---- | --------- | ---------------------------------------- | ---------------------------------------------------------------------- |
+| 1    | Sales rep | Start a missing-restaurant flow          | Confirm no nearby reasonable match exists before creating a new record |
+| 2    | Sales rep | Capture the restaurant position          | Use current location or manual map pin to save latitude and longitude  |
+| 3    | Sales rep | Enter the minimum restaurant information | Persist the new restaurant with creation metadata                      |
+| 4    | Sales rep | Continue directly into reporting         | Open the report page so the visit can be logged in the same session    |
 
 ### Supervisor Assignment Flow
 
 Open supervisor view -> inspect employees and restaurants -> choose restaurant -> choose rep -> confirm assignment.
 
+| Step | Actor      | Goal                                                         | Key system response                                               |
+| ---- | ---------- | ------------------------------------------------------------ | ----------------------------------------------------------------- |
+| 1    | Supervisor | Inspect current ownership and workload                       | Show restaurant status, assignee, and report history summary      |
+| 2    | Supervisor | Assign an unowned restaurant or reassign an owned restaurant | Require a reassignment reason when an active owner already exists |
+| 3    | System     | Persist the ownership change safely                          | Enforce optimistic concurrency and record assignment history      |
+
 ### Supervisor Review Flow
 
 Open supervisor view -> filter by rep or restaurant status -> review latest activity and ownership.
+
+| Step | Actor      | Goal                           | Key system response                                                   |
+| ---- | ---------- | ------------------------------ | --------------------------------------------------------------------- |
+| 1    | Supervisor | Filter operational data        | Support filters by rep, restaurant status, and import-review state    |
+| 2    | Supervisor | Inspect current progress       | Show latest activity, owner, and the most recent reporting outcome    |
+| 3    | Supervisor | Resolve operational exceptions | Review duplicate candidates, failed geocodes, and ownership conflicts |
+
+Detailed flowcharts, handoff notes, and review checkpoints are maintained in [Business Flows](./business-flows.md). Delivery sequencing and verification coverage are maintained in [Implementation Tasks](./implementation-tasks.md) and [Testing Guide](./testing-guide.md).
 
 ## Functional Requirements
 
