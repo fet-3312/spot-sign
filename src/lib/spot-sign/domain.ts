@@ -451,6 +451,7 @@ function geocodeAddress(
 	const seed = `${normalizeText(name)}:${normalizedAddress}`;
 	let hash = 0;
 	// Use a deterministic string hash so the demo geocoder returns stable pseudo-random coordinates.
+	// This is only for the in-memory MVP demo and should be replaced by a real geocoding provider in production.
 	for (const char of seed) hash = (hash * geocodeHashMultiplier + char.charCodeAt(0)) % 10_000;
 	const latitude =
 		defaultArea.latitude + ((hash % geocodeGridSize) - geocodeOffset) * geocodeDegreeFactor;
@@ -501,6 +502,7 @@ export function importRestaurantsFromCsv(
 			(restaurant) =>
 				normalizeText(restaurant.name) === normalizeText(rawName) ||
 				(normalizeText(restaurant.addressText) &&
+					normalizeText(rawAddress) &&
 					normalizeText(restaurant.addressText) === normalizeText(rawAddress))
 		);
 		if (duplicateCandidate) {

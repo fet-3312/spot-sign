@@ -1,3 +1,4 @@
+import { photoAccessTtlMs } from '$lib/spot-sign/constants';
 import { getCurrentUser } from '$lib/server/spot-sign/auth';
 import { fail, ok } from '$lib/server/spot-sign/http';
 import { getState } from '$lib/server/spot-sign/state';
@@ -16,5 +17,8 @@ export const GET: RequestHandler = async ({ cookies, url }) => {
 	if (user.role !== 'supervisor' && report && report.userId !== user.id) {
 		return fail(403, 'FORBIDDEN', '無權查看此照片');
 	}
-	return ok({ accessUrl: photo.dataUrl, expiresAt: new Date(Date.now() + 60_000).toISOString() });
+	return ok({
+		accessUrl: photo.dataUrl,
+		expiresAt: new Date(Date.now() + photoAccessTtlMs).toISOString()
+	});
 };

@@ -81,5 +81,6 @@ export const allowedTransitions: Record<RestaurantStatus, RestaurantStatus[]> = 
 
 export const acceptedPhotoTypes = ['image/jpeg', 'image/png', 'image/webp'];
 export const maxPhotoBytes = 10 * 1024 * 1024;
+export const photoAccessTtlMs = 60_000;
 export const sessionCookieName = 'spot_sign_session';
 export const sessionTtlMs = 1000 * 60 * 60 * 24 * 7;
