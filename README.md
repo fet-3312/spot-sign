@@ -24,6 +24,21 @@ pnpm test
 pnpm build
 ```
 
+## Local Demo Accounts
+
+登入本機平台基線時，可使用以下測試帳號：
+
+- Sales rep: `rep@spot-sign.local` / `rep-demo-pass`
+- Supervisor: `supervisor@spot-sign.local` / `supervisor-demo-pass`
+
+可透過環境變數調整預設試跑區域與本機儲存位置：
+
+- `SPOT_SIGN_DEFAULT_AREA_LATITUDE`
+- `SPOT_SIGN_DEFAULT_AREA_LONGITUDE`
+- `SPOT_SIGN_DEFAULT_AREA_RADIUS_METERS`
+- `SPOT_SIGN_DEV_SQLITE_PATH`
+- `SPOT_SIGN_DEV_OBJECT_STORAGE_PATH`
+
 ## Docs
 
 完整規格與設計請直接看 [docs/README.md](./docs/README.md)。
