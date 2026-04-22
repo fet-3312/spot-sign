@@ -87,6 +87,7 @@ Open supervisor view -> filter by rep or restaurant status -> review latest acti
 
 - The default landing page is a map view.
 - The app must request browser geolocation and fall back to a default area when unavailable.
+- The default area must be configurable by environment and not hardcoded into the frontend build.
 - Restaurant markers must use visual status distinctions.
 - Marker summaries must show at least restaurant name, current status, assigned rep, and last report time.
 - The report page must support editing restaurant name, contact person, status, notes, and one photo.
@@ -94,7 +95,9 @@ Open supervisor view -> filter by rep or restaurant status -> review latest acti
 - The system must support CSV import with restaurant name and address as the minimum required columns.
 - Imported restaurants must be geocoded before they are shown on the map, and records that fail geocoding must be reviewable by a supervisor.
 - Supervisors must be able to see all reports.
+- Sales reps must not be able to read full cross-team report history.
 - Assignment must enforce a single active owner per restaurant.
+- Reassignment of an already assigned restaurant must require a reason.
 - Assignment history must be preserved even if the UI initially shows only current ownership.
 
 ## Data Intake Strategy
@@ -107,16 +110,20 @@ Open supervisor view -> filter by rep or restaurant status -> review latest acti
 ## Access And Ownership Rules
 
 - Sales reps can view nearby restaurants on the map, open assigned or unassigned restaurants, and submit visit reports.
-- Sales reps cannot reassign restaurant ownership.
+- Sales reps can create a new restaurant only when no reasonable nearby match exists on the map.
+- Sales reps can view the current summary of nearby restaurants and their own submitted reports, but cannot view full cross-team report history.
+- Sales reps cannot reassign restaurant ownership or directly edit restaurant master data after creation.
 - Supervisors can view all restaurants, all employees, all reports, and all assignment history.
-- Supervisors can assign or reassign a restaurant to exactly one active sales rep.
+- Supervisors can assign or reassign a restaurant to exactly one active sales rep and can correct restaurant master data when needed.
 - Unassigned restaurants are visible to sales reps for discovery, but assignment determines the current owner shown in supervisor views and operational reporting.
 - Assignment changes must record who changed the owner, when it changed, and the previous and new owner.
+- Reassignment of an already assigned restaurant must capture a reassignment reason for auditability.
 
 ## Data Ownership Model
 
 - Restaurant stores master data and current operational state, including restaurant name, location, current assignee, and current derived status.
 - VisitReport stores each field interaction as an immutable activity record, including submitted contact person, status update, notes, photo, reporter, and timestamp.
+- A sales rep report can propose updated contact or status information, but it must not overwrite historical VisitReport records.
 - The latest valid VisitReport can update the restaurant's current derived status, but historical reports must remain unchanged.
 - AssignmentHistory stores ownership changes independently from VisitReport so reassignment remains auditable.
 
@@ -168,10 +175,13 @@ Open supervisor view -> filter by rep or restaurant status -> review latest acti
 4. A supervisor can see all reports and all employees.
 5. A supervisor can assign a restaurant to exactly one rep.
 6. The primary mobile workflow works without horizontal scrolling.
+7. If geolocation is denied, the app still loads a default trial area and allows reporting.
+8. Reassigning an already owned restaurant requires a reason and creates an assignment history entry.
+9. A sales rep can view nearby restaurant summaries and their own submitted reports, but cannot access full cross-team report history or directly edit restaurant master data after creation.
+10. CSV import accepts restaurant name and address, while duplicate candidates and failed geocodes are routed to supervisor review before publication.
 
 ## Open Product Items
 
-- Trial city or district is still undefined and will affect default map center and fixture data.
-- Password reset, account disablement, and first-login password change are not yet decided.
+- Trial city or district is a deployment configuration input rather than a product blocker for RD implementation.
+- Password reset and account disablement are operator-managed workflows in MVP, and first-login password change is out of scope.
 - Reporting and export needs beyond MVP remain undecided.
-- The exact rule for whether sales reps can edit restaurant master data after creation is still undecided.

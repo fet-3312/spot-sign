@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document defines the system architecture for the Spot Sign MVP under a Cloudflare-first deployment model. The system must support login, map-based restaurant discovery, report submission, supervisor assignment, and photo upload while keeping the initial operating cost near zero.
+This document defines the system architecture for the Spot Sign MVP under a Cloudflare-first deployment model. The system must support login, map-based restaurant discovery, report submission, supervisor assignment, CSV import review, and photo upload while keeping the initial operating cost near zero.
 
 ## Architecture Goals
 
@@ -35,6 +35,11 @@ This document defines the system architecture for the Spot Sign MVP under a Clou
 
 - Cloudflare R2 stores uploaded report photos.
 
+### External Services
+
+- A server-side geocoding provider resolves imported restaurant addresses into coordinates.
+- The provider must be isolated behind an adapter so vendor changes do not affect product flows.
+
 ### GIS Layer
 
 - Leaflet handles map rendering and interaction.
@@ -60,6 +65,7 @@ This document defines the system architecture for the Spot Sign MVP under a Clou
   - Restaurants
   - Visit Reports
   - Assignments
+  - Imports
   - Uploads
 
 ### Data Layer
@@ -67,6 +73,7 @@ This document defines the system architecture for the Spot Sign MVP under a Clou
 - D1 holds transactional records.
 - R2 holds binary photo objects.
 - The app stores only photo keys and metadata in the database.
+- D1 also stores import jobs and review items for failed geocodes or duplicate candidates.
 
 ## Deployment Topology
 
@@ -87,7 +94,16 @@ This document defines the system architecture for the Spot Sign MVP under a Clou
 
 1. Frontend gets current location.
 2. Frontend requests nearby restaurants using lat, lng, and radius.
-3. Worker reads from D1 and returns marker-ready data.
+3. If geolocation is unavailable, frontend falls back to the configured trial area.
+4. Worker reads from D1 and returns marker-ready data.
+
+### CSV Import Review Flow
+
+1. Supervisor uploads a CSV file with restaurant name and address.
+2. Worker creates an import job and validates row shape.
+3. Worker geocodes each valid row through the geocoding adapter.
+4. Worker writes successful rows to restaurants and sends failed or duplicate-like rows to the review queue.
+5. Supervisor resolves review items before they become visible on the map.
 
 ### Report Submission Flow
 
@@ -96,12 +112,14 @@ This document defines the system architecture for the Spot Sign MVP under a Clou
 3. Worker writes photo to R2.
 4. Frontend submits the report payload.
 5. Worker writes the visit report and updates restaurant summary fields.
+6. Worker preserves historical visit report records as immutable activity history.
 
 ### Assignment Flow
 
 1. Supervisor chooses a restaurant and a rep.
 2. Worker validates role and ownership rules.
-3. Worker updates current owner and appends assignment history.
+3. If the restaurant already has an owner, Worker requires a reassignment reason and checks for concurrent ownership changes.
+4. Worker updates current owner and appends assignment history.
 
 ## Data Ownership
 
@@ -110,6 +128,7 @@ This document defines the system architecture for the Spot Sign MVP under a Clou
 - Restaurants table is the source of truth for current ownership and current status.
 - Visit reports table is the source of truth for historical field activity.
 - Assignment history table is the source of truth for ownership changes.
+- Import jobs and review items are the source of truth for CSV intake progress and unresolved import exceptions.
 - R2 object storage is the source of truth for photo files.
 
 ## Security Model
@@ -118,6 +137,8 @@ This document defines the system architecture for the Spot Sign MVP under a Clou
 - Session cookies must be httpOnly, secure, and sameSite-protected.
 - All write APIs require a valid session.
 - Supervisor-only APIs require explicit role checks.
+- Reps must not be able to read full cross-team report history.
+- Supervisor-only APIs must gate restaurant master-data correction, CSV import, and assignment changes.
 - Upload APIs must validate file size, type, and naming.
 - Storage credentials must never be exposed to the browser.
 
@@ -128,6 +149,7 @@ This document defines the system architecture for the Spot Sign MVP under a Clou
 - Avoid CPU-heavy image processing.
 - Avoid database features that depend on PostGIS or PostgreSQL-specific extensions.
 - Implement nearby search using simplified geographic filtering rather than advanced GIS indexes.
+- Keep geocoding calls server-side and bounded by explicit quotas or review workflows.
 
 ## Scalability Path
 
@@ -154,5 +176,6 @@ This document defines the system architecture for the Spot Sign MVP under a Clou
 
 - Public OpenStreetMap tiles are acceptable for early use but may not be suitable for larger commercial traffic.
 - D1 is sufficient for MVP but needs validation against future reporting complexity.
-- Self-managed auth increases application-side security responsibility.
+- Authentication choice remains a meaningful operational decision because self-managed credentials increase application-side security responsibility.
+- Geocoding quality, quota, and provider terms can directly affect CSV import reliability.
 - R2 is suitable for original image storage, but advanced media workflows will need extra infrastructure later.
