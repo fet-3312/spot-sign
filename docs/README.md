@@ -5,7 +5,7 @@ This folder contains the current planning baseline for the Spot Sign MVP.
 ## Documents
 
 1. [PRD](./prd.md)
-   Product scope, users, flows, acceptance criteria, and MVP boundaries.
+   Product framing, user scenarios, screen model, core flows, acceptance criteria, and MVP boundaries.
 2. [System Architecture](./system-architecture.md)
    Overall system structure, runtime responsibilities, deployment topology, and operational risks.
 3. [Technical Design v0.1](./technical-design-cloudflare-v0.1.md)
@@ -28,7 +28,7 @@ This folder contains the current planning baseline for the Spot Sign MVP.
 
 ## How To Use These Docs
 
-- Use `prd.md` for product and UX alignment.
+- Use `prd.md` for product and UX alignment, including the intended screen shape and mobile interaction model.
 - Use `system-architecture.md` for platform and backend discussions.
 - Use `technical-design-cloudflare-v0.1.md` as the implementation baseline for RD.
 - Use `api-contract.md` when implementing server routes and frontend integration.
