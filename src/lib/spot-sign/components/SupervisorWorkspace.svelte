@@ -59,11 +59,15 @@
 		id: string;
 		action: 'approve_create' | 'merge_existing' | 'retry_geocode' | 'reject_row';
 		correctedAddress?: string;
+		correctedLatitude?: number;
+		correctedLongitude?: number;
 		targetRestaurantId?: string | null;
 	}) => Promise<void>;
 
 	let demoCsv = buildDemoCsv();
 	let correctedAddresses: Record<string, string> = {};
+	let correctedLatitudes: Record<string, number> = {};
+	let correctedLongitudes: Record<string, number> = {};
 
 	function markerPosition(restaurant: RestaurantSummary) {
 		const latSpan = 0.04;
@@ -207,9 +211,31 @@
 								placeholder="修正地址後 retry geocode"
 							/>
 							<div class="mt-3 grid gap-2 sm:grid-cols-2">
+								<input
+									class="rounded-2xl border-slate-300"
+									type="number"
+									step="0.000001"
+									bind:value={correctedLatitudes[item.id]}
+									placeholder="核准建立緯度"
+								/>
+								<input
+									class="rounded-2xl border-slate-300"
+									type="number"
+									step="0.000001"
+									bind:value={correctedLongitudes[item.id]}
+									placeholder="核准建立經度"
+								/>
+							</div>
+							<div class="mt-3 grid gap-2 sm:grid-cols-2">
 								<button
 									class="rounded-2xl bg-slate-900 px-3 py-2 text-xs font-semibold text-white"
-									on:click={() => onResolveReview({ id: item.id, action: 'approve_create' })}
+									on:click={() =>
+										onResolveReview({
+											id: item.id,
+											action: 'approve_create',
+											correctedLatitude: correctedLatitudes[item.id] ?? defaultArea.latitude,
+											correctedLongitude: correctedLongitudes[item.id] ?? defaultArea.longitude
+										})}
 								>
 									直接建立
 								</button>

@@ -44,7 +44,7 @@
 	let restaurants: (RestaurantSummary & { distanceMeters?: number })[] = [];
 	let selectedRestaurantId: string | null = null;
 	let selectedRestaurantDetail: RestaurantSummary | null = null;
-	let restaurantReports: Array<{
+	let selectedRestaurantReports: Array<{
 		id: string;
 		restaurantName: string;
 		status: RestaurantStatus;
@@ -132,7 +132,7 @@
 		const data = await api(`/api/restaurants/${restaurantId}`);
 		selectedRestaurantDetail = data.restaurant;
 		assignmentHistory = data.assignmentHistory;
-		restaurantReports = (await api(`/api/reports?restaurantId=${restaurantId}`)).items;
+		selectedRestaurantReports = (await api(`/api/reports?restaurantId=${restaurantId}`)).items;
 	}
 
 	async function loadSupervisorData() {
@@ -212,7 +212,7 @@
 		screen = 'auth';
 		selectedRestaurantId = null;
 		selectedRestaurantDetail = null;
-		restaurantReports = [];
+		selectedRestaurantReports = [];
 		reports = [];
 		employees = [];
 		reviewItems = [];
@@ -324,6 +324,8 @@
 		id: string;
 		action: 'approve_create' | 'merge_existing' | 'retry_geocode' | 'reject_row';
 		correctedAddress?: string;
+		correctedLatitude?: number;
+		correctedLongitude?: number;
 		targetRestaurantId?: string | null;
 	}) {
 		actionPending = true;
@@ -336,8 +338,8 @@
 					action: payload.action,
 					correctedAddress: payload.correctedAddress,
 					targetRestaurantId: payload.targetRestaurantId,
-					correctedLatitude: defaultArea.latitude,
-					correctedLongitude: defaultArea.longitude
+					correctedLatitude: payload.correctedLatitude,
+					correctedLongitude: payload.correctedLongitude
 				})
 			});
 			await refreshData();
@@ -420,7 +422,7 @@
 			{:else if screen === 'report' && selectedRestaurant()}
 				<ReportComposer
 					restaurant={selectedRestaurant()!}
-					reports={restaurantReports}
+					reports={selectedRestaurantReports}
 					error={actionError}
 					pending={actionPending}
 					onBack={() => (screen = user!.role === 'supervisor' ? 'supervisor' : 'map')}

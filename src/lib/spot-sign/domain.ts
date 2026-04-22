@@ -15,6 +15,10 @@ import type {
 } from './types';
 
 const earthRadiusMeters = 6_371_000;
+const geocodeHashMultiplier = 31;
+const geocodeGridSize = 50;
+const geocodeOffset = 25;
+const geocodeDegreeFactor = 0.0012;
 
 const twoDigits = (value: number) => value.toString().padStart(2, '0');
 
@@ -446,9 +450,13 @@ function geocodeAddress(
 
 	const seed = `${normalizeText(name)}:${normalizedAddress}`;
 	let hash = 0;
-	for (const char of seed) hash = (hash * 31 + char.charCodeAt(0)) % 10_000;
-	const latitude = defaultArea.latitude + ((hash % 50) - 25) * 0.0012;
-	const longitude = defaultArea.longitude + (((hash / 50) % 50) - 25) * 0.0012;
+	// Use a deterministic string hash so the demo geocoder returns stable pseudo-random coordinates.
+	for (const char of seed) hash = (hash * geocodeHashMultiplier + char.charCodeAt(0)) % 10_000;
+	const latitude =
+		defaultArea.latitude + ((hash % geocodeGridSize) - geocodeOffset) * geocodeDegreeFactor;
+	const longitude =
+		defaultArea.longitude +
+		(((hash / geocodeGridSize) % geocodeGridSize) - geocodeOffset) * geocodeDegreeFactor;
 	return { status: 'success', message: 'ok', latitude, longitude };
 }
 
@@ -620,7 +628,6 @@ export function resolveReviewItem(
 				sourceType: 'import'
 			});
 			item.resolutionStatus = 'resolved';
-			item.geocodeStatus = 'failed';
 			item.geocodeMessage = '已修正後重試並建立餐廳';
 		} else {
 			item.rawAddress = retriedAddress;

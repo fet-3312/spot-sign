@@ -5,6 +5,10 @@ import { fail, ok } from '$lib/server/spot-sign/http';
 import { getState } from '$lib/server/spot-sign/state';
 import type { RequestHandler } from './$types';
 
+function buildPhotoDatePath(date: Date) {
+	return date.toISOString().slice(0, 10).replace(/-/g, '/');
+}
+
 export const POST: RequestHandler = async ({ cookies, request }) => {
 	const user = await getCurrentUser(cookies);
 	if (!user) return fail(401, 'UNAUTHORIZED', '請先登入');
@@ -19,7 +23,8 @@ export const POST: RequestHandler = async ({ cookies, request }) => {
 		return fail(400, 'VALIDATION_ERROR', '圖片不可超過 10MB', { photo: '圖片不可超過 10MB' });
 	}
 	const buffer = Buffer.from(await file.arrayBuffer());
-	const photoKey = `photos/${new Date().toISOString().slice(0, 10).replace(/-/g, '/')}/${createId('img')}`;
+	const now = new Date();
+	const photoKey = `photos/${buildPhotoDatePath(now)}/${createId('img')}`;
 	getState().photos.unshift({
 		photoKey,
 		contentType: file.type,
