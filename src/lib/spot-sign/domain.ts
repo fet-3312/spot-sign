@@ -450,8 +450,8 @@ function geocodeAddress(
 
 	const seed = `${normalizeText(name)}:${normalizedAddress}`;
 	let hash = 0;
-	// Use a deterministic string hash so the demo geocoder returns stable pseudo-random coordinates.
-	// This is only for the in-memory MVP demo and should be replaced by a real geocoding provider in production.
+	// TODO: Replace this demo-only geocoder with a real provider adapter before production use.
+	// Use a deterministic string hash so the in-memory MVP returns stable pseudo-random coordinates.
 	for (const char of seed) hash = (hash * geocodeHashMultiplier + char.charCodeAt(0)) % 10_000;
 	const latitude =
 		defaultArea.latitude + ((hash % geocodeGridSize) - geocodeOffset) * geocodeDegreeFactor;
