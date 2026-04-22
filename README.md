@@ -24,6 +24,18 @@ pnpm test
 pnpm build
 ```
 
+## Demo Credentials
+
+- 業務：`rep@spotsign.test` / `rep-demo-123`
+- 主管：`supervisor@spotsign.test` / `super-demo-123`
+
+## Local MVP Notes
+
+- 目前 MVP 在單一 SvelteKit 專案中提供 UI 與 API。
+- 為了讓驗收流程可直接在 sandbox 執行，資料層採用 **in-memory demo state**，包含登入 session、餐廳、回報、指派、照片與匯入 review queue。
+- 重新啟動開發伺服器後，demo 資料會回到預設種子資料。
+- API 已覆蓋登入、餐廳查詢／建立、回報、圖片上傳、主管指派、CSV 匯入與 review flow 的 MVP 閉環。
+
 ## Docs
 
 完整規格與設計請直接看 [docs/README.md](./docs/README.md)。
