@@ -10,7 +10,10 @@ test('allows the supervisor demo account to sign in and view the baseline dashbo
 
 	await expect(page.getByRole('heading', { name: 'Local platform baseline' })).toBeVisible();
 	await expect(page.getByText('simulated-r2')).toBeVisible();
-	await expect(page.getByRole('link', { name: 'Supervisor' })).toBeVisible();
+	await page.getByRole('link', { name: 'Supervisor' }).click();
+
+	await expect(page.getByRole('heading', { name: 'Supervisor-only access check' })).toBeVisible();
+	await expect(page.getByRole('heading', { name: 'Demo Supervisor' })).toBeVisible();
 });
 
 test('blocks rep access to the supervisor-only page', async ({ page }) => {
