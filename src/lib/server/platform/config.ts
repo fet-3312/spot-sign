@@ -14,7 +14,12 @@ function readNumber(value: string | undefined, fallback: number): number {
 	if (!value) return fallback;
 
 	const parsed = Number(value);
-	return Number.isFinite(parsed) ? parsed : fallback;
+	if (Number.isFinite(parsed)) {
+		return parsed;
+	}
+
+	console.warn(`Ignoring invalid numeric Spot Sign config value: ${value}`);
+	return fallback;
 }
 
 export function createPlatformConfig(

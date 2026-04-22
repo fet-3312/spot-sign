@@ -4,7 +4,10 @@ import type { RequestHandler } from './$types';
 
 export const POST: RequestHandler = async ({ cookies, locals }) => {
 	const token = cookies.get(SESSION_COOKIE_NAME);
-	await locals.platform.auth.clearSession(token);
-	cookies.delete(SESSION_COOKIE_NAME, { path: '/' });
+	if (token) {
+		await locals.platform.auth.clearSession(token);
+		cookies.delete(SESSION_COOKIE_NAME, { path: '/' });
+	}
+
 	throw redirect(303, '/');
 };

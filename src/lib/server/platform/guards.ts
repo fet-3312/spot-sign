@@ -11,6 +11,9 @@ export function requireUser(user: CurrentUser | null): CurrentUser {
 
 export function requireRole(user: CurrentUser, role: UserRole): void {
 	if (user.role !== role) {
-		throw error(403, 'Supervisor access is required for this page.');
+		throw error(
+			403,
+			`${role.charAt(0).toUpperCase() + role.slice(1)} access is required for this page.`
+		);
 	}
 }

@@ -45,7 +45,11 @@ function hashPassword(password: string): string {
 }
 
 function verifyPassword(password: string, storedHash: string): boolean {
-	const [, salt, expectedHash] = storedHash.split(':');
+	const [algorithm, salt, expectedHash] = storedHash.split(':');
+	if (algorithm !== 'scrypt' || !salt || !expectedHash) {
+		return false;
+	}
+
 	const actualHash = scryptSync(password, salt, 64);
 	const expected = Buffer.from(expectedHash, 'hex');
 	return actualHash.length === expected.length && timingSafeEqual(actualHash, expected);
